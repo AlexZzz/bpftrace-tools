@@ -1,0 +1,16 @@
+#!/usr/sbin/bpftrace
+
+#include <linux/genhd.h>
+#include <linux/blk_types.h>
+
+kprobe:bio_split
+{
+	$disk = ((struct bio *)arg0)->bi_disk->disk_name;
+	@splits[comm,pid,$disk]=count();
+}
+
+interval:s:1
+{
+	print(@splits);
+	clear(@splits);
+}
