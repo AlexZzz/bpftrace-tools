@@ -1,4 +1,16 @@
 #!/usr/sbin/bpftrace
+#
+# This tool shows number of request split events
+# per second by process and disk name.
+#
+# This can be used to characterize workload.
+# If requests from an application and a filesystem
+# are larger than queue/max_sectors_kb,
+# iostat won't show merges, but requests will be
+# splitted.
+#
+# Copyright 2020 Aleksei Zakharov
+# Licensed under the Apache License, Version 2.0 (the "License")
 
 #include <linux/genhd.h>
 #include <linux/blk_types.h>
