@@ -23,6 +23,7 @@ kprobe:bio_split
 
 interval:s:1
 {
+	time();
 	print(@splits);
 	clear(@splits);
 }
