@@ -1,0 +1,40 @@
+#!/usr/bin/env bpftrace
+#
+# This tool shows MSR writes/reads count by MSR address
+#
+# This can help in diagnose when see a lot of MSR reads/writes
+# during profiling.
+#
+# Copyright 2020 Aleksei Zakharov
+# Licensed under the Apache License, Version 2.0 (the "License")
+
+BEGIN
+{
+	printf("Tracing write/read msr...\n");
+}
+
+tracepoint:msr:write_msr
+{
+	@w[args->msr]=count();
+}
+
+tracepoint:msr:read_msr
+{
+	@r[args->msr]=count();
+}
+
+i:s:1
+{
+	printf("MSR_WRITE:\n");
+	print(@w);
+	clear(@w);
+	printf("MSR_READ:\n");
+	print(@r);
+	clear(@r);
+}
+
+END
+{
+	clear(@w);
+	clear(@r);
+}
